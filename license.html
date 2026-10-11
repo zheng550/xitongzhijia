@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>许可协议</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body{ background:#f3f4f6; }
+        .agreement-text{
+            height:280px;
+            overflow-y:auto;
+            border:1px solid #d1d5db;
+            background:#fff;
+            padding:12px;
+        }
+    </style>
+</head>
+<body class="max-w-3xl mx-auto p-6">
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-bold mb-4">最终用户许可协议</h2>
+        <div class="agreement-text text-sm text-gray-700 leading-relaxed">
+            <p>重要提示：在使用本软件之前，请仔细阅读以下许可协议条款。</p>
+            <br>
+            <p>1、版权声明：本程序仅供个人学习研究使用，所有Windows系统镜像版权归微软公司所有，请使用正版授权。</p>
+            <p>2、禁止行为：禁止将本软件用于商业销售、二次分发、非法牟利。</p>
+            <p>3、免责声明：本软件按现状提供，不对任何直接或间接损失承担赔偿责任。用户自行承担使用软件的全部风险。</p>
+            <p>4、如不同意本协议条款，请立即关闭本程序，不要使用本软件。勾选"我同意"即代表您已阅读并接受全部协议内容。</p>
+            <br>
+            <p>请完整阅读全部协议内容，向下滚动查看全部条款。</p>
+        </div>
+        <div class="mt-5 flex items-center gap-2">
+            <input type="checkbox" id="agreeCheck" class="w-4 h-4 cursor-pointer">
+            <label for="agreeCheck" class="cursor-pointer text-sm">我已阅读并同意许可条款</label>
+        </div>
+        <div class="mt-6 flex justify-end gap-3">
+            <button id="btnCancel" class="px-4 py-2 border border-gray-300 rounded text-sm">拒绝并退出</button>
+            <button id="btnNext" class="px-6 py-2 bg-blue-600 text-white rounded text-sm disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>继续使用</button>
+        </div>
+    </div>
+
+    <script>
+        const agreeCheck = document.getElementById('agreeCheck');
+        const btnNext = document.getElementById('btnNext');
+        const btnCancel = document.getElementById('btnCancel');
+
+        agreeCheck.addEventListener('change', () => {
+            btnNext.disabled = !agreeCheck.checked;
+        });
+
+        btnNext.addEventListener('click', () => {
+            localStorage.setItem('licenseAccepted', 'true');
+            location.href = 'lock.html';
+        });
+
+        btnCancel.addEventListener('click', () => {
+            if (confirm('确定拒绝协议并退出吗？')) {
+                // 网页里不能真的"关闭程序"，跳到空白页并提示
+                document.body.innerHTML = `
+                    <div style="display:flex;align-items:center;justify-content:center;height:100vh;
+                                flex-direction:column;font-family:Microsoft YaHei;color:#666;">
+                        <h1 style="font-size:24px;">您已拒绝协议</h1>
+                        <p style="margin-top:12px;">请直接关闭此浏览器标签页。</p>
+                    </div>`;
+            }
+        });
+    </script>
+</body>
+</html>

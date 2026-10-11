@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>请输入访问密钥</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Microsoft Yahei}
+        body{
+            background:#1f2937;
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .box{
+            background:#2d3748;
+            padding:40px;
+            border-radius:12px;
+            width:420px;
+        }
+        h2{ color:#fff; text-align:center; margin-bottom:24px; }
+        input{
+            width:100%; padding:12px 16px; font-size:16px;
+            border-radius:6px; border:none; outline:none; margin-bottom:16px;
+        }
+        button{
+            width:100%; padding:12px; background:#2563eb; color:white;
+            border:none; border-radius:6px; font-size:16px; cursor:pointer;
+        }
+        button:hover{background:#1d4ed8}
+        .tip{ color:#f87171; margin-top:12px; text-align:center; display:none; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>系统之家客户端 · 验证密钥</h2>
+    <input id="keyInput" placeholder="请输入访问密钥" type="password">
+    <button id="confirmBtn">确认</button>
+    <div class="tip" id="errorTip">密钥错误，请重新输入</div>
+</div>
+
+<script>
+    // ===== 前置检查：没同意许可协议的，直接踢回去 =====
+    if (localStorage.getItem('licenseAccepted') !== 'true') {
+        location.href = 'license.html';
+    }
+
+    const correctKey = "Cz721714";
+    const input = document.getElementById('keyInput');
+    const btn = document.getElementById('confirmBtn');
+    const tip = document.getElementById('errorTip');
+
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') checkKey();
+    });
+    btn.onclick = checkKey;
+
+    function checkKey() {
+        tip.style.display = 'none';
+        const val = input.value.trim();
+        if (val === correctKey) {
+            localStorage.setItem('keyVerified', 'true');
+            location.href = "index.html";
+        } else {
+            tip.style.display = 'block';
+            input.value = '';
+        }
+    }
+</script>
+</body>
+</html>

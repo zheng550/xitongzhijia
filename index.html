@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统之家 - 纯净Windows系统镜像下载站</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-hover:hover { color: #2563eb; transition: color 0.2s; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .download-btn:hover { background-color: #1d4ed8; transition: background-color 0.2s; }
+        .ed2k-btn:hover { background-color: #4b5563; transition: background-color 0.2s; }
+        .toast {
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(0, 0, 0, 0.8); color: white;
+            padding: 12px 24px; border-radius: 8px; font-size: 14px;
+            z-index: 9999; transition: transform 0.3s ease;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .page { display: none; }
+        .page.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div id="toast" class="toast"></div>
+
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center cursor-pointer" onclick="goHome()">
+                <h1 class="text-xl font-bold text-blue-600">系统之家</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#home" class="nav-hover text-blue-600 nav-link">首页</a>
+                <a href="#win11" class="nav-hover nav-link">Win11系统</a>
+                <a href="#win10" class="nav-hover nav-link">Win10系统</a>
+                <a href="#win7" class="nav-hover nav-link">Win7系统</a>
+                <a href="#server" class="nav-hover nav-link">服务器系统</a>
+                <a href="#about" class="nav-hover nav-link">关于</a>
+                <span class="text-gray-400 text-sm">重装教程</span>
+            </nav>
+            <div class="hidden lg:flex items-center">
+                <input id="searchInput" type="text" placeholder="搜索系统版本..." class="border border-gray-300 rounded-l-md px-3 py-1.5 text-sm w-48 focus:outline-none focus:border-blue-500" onkeydown="if(event.key==='Enter') doSearch()">
+                <button onclick="doSearch()" class="bg-blue-600 text-white px-4 py-1.5 rounded-r-md text-sm download-btn">搜索</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- ====================== 首页 ====================== -->
+        <div id="page-home" class="page active">
+            <!-- 用户信息卡片 -->
+            <section class="bg-white rounded-xl p-6 mb-8 border border-gray-100">
+                <h3 class="text-lg font-bold mb-3">👤 用户信息</h3>
+                <div class="mb-2">当前用户名：<span id="username-show" class="text-blue-600 font-medium">未设置</span></div>
+                <input id="username-input" type="text" placeholder="请输入用户名" class="border border-gray-300 rounded px-3 py-2 w-64 mr-2">
+                <br class="my-2">
+                <button onclick="saveUser()" class="bg-blue-600 text-white px-4 py-2 rounded">保存用户名</button>
+                <button onclick="clearUser()" class="bg-gray-500 text-white px-4 py-2 rounded ml-2">清除用户名</button>
+                <button onclick="exportUser()" class="bg-green-600 text-white px-4 py-2 rounded ml-2">导出数据</button>
+                <button onclick="importUser()" class="bg-yellow-600 text-white px-4 py-2 rounded ml-2">导入数据</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+            </section>
+
+            <!-- 首屏推荐Banner -->
+            <section class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-8 mb-8 text-white">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-6 md:mb-0">
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-xs">热门推荐</span>
+                        <h2 class="text-3xl font-bold mt-3 mb-2">Windows 11 25H2 专业纯净版</h2>
+                        <p class="text-blue-100 mb-4">官方原版制作 · 无捆绑软件 · 自动激活 · 兼容新老电脑</p>
+                        <div class="flex space-x-4 text-sm text-blue-100">
+                            <span>文件大小：7.96GB</span>
+                            <span>更新时间：2025-10-05</span>
+                            <span>下载次数：142,360</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-3">
+                        <button class="bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg download-btn"
+                            onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyNUgyLmlzb1pa')">
+                            迅雷下载
+                        </button>
+                        <button class="border border-white/50 text-white px-8 py-2 rounded-lg text-sm ed2k-btn hover:bg-white/10 transition"
+                            onclick="copyLink('ed2k://|file|Win11_25H2_Chinese_Simplified_x64_v2.iso|8543608832|63195D05D675D2A00A9C5A1A5DC82B9C|h=BYX2XONEWGDI7YBSI6AVNUTDAZEJM57Q|/')">
+                            ED2K下载
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 系统分类入口 -->
+            <section class="mb-8">
+                <h3 class="text-lg font-bold mb-4">系统分类</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white rounded-lg p-5 text-center card-hover cursor-pointer border border-gray-100" onclick="goCategory('win11')">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-blue-600 font-bold">11</span>
+                        </div>
+                        <h4 class="font-semibold">Win11系统</h4>
+                        <p class="text-gray-500 text-xs mt-1">21H2-25H2全版本</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-5 text-center card-hover cursor-pointer border border-gray-100" onclick="goCategory('win10')">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-green-600 font-bold">10</span>
+                        </div>
+                        <h4 class="font-semibold">Win10系统</h4>
+                        <p class="text-gray-500 text-xs mt-1">稳定流畅首选</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-5 text-center card-hover cursor-pointer border border-gray-100" onclick="goCategory('win7')">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-orange-600 font-bold">7</span>
+                        </div>
+                        <h4 class="font-semibold">Win7系统</h4>
+                        <p class="text-gray-500 text-xs mt-1">多版本SP1原版</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-5 text-center card-hover cursor-pointer border border-gray-100" onclick="goCategory('server')">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-purple-600 font-bold">S</span>
+                        </div>
+                        <h4 class="font-semibold">服务器系统</h4>
+                        <p class="text-gray-500 text-xs mt-1">Server全系列</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 热门下载排行 -->
+            <section class="mb-8 grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg p-5 border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold">Win10 热门下载</h3>
+                        <a href="#win10" class="text-blue-600 text-sm">更多 ></a>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-center justify-between pb-3 border-b border-gray-100">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-red-500 text-white text-xs rounded flex items-center justify-center mr-3">1</span>
+                                <span class="text-sm">Win10 22H2 消费者版 64位</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTAyMmgyLmlzb1pa')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|zh-cn_windows_10_consumer_editions_version_22h2_updated_july_2025_x64_dvd_f841fba5.iso|6969270272|32FA102F277B242C2E37135014CA1200|/')">ED2K</button>
+                            </div>
+                        </li>
+                        <li class="flex items-center justify-between pb-3 border-b border-gray-100">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-orange-500 text-white text-xs rounded flex items-center justify-center mr-3">2</span>
+                                <span class="text-sm">Win10 企业版 LTSC 2021 64位</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTBsdHNjLmlzb1pa')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|SW_DVD9_WIN_ENT_LTSC_2021_64BIT_ChnSimp_MLF_X22-84402.ISO|5044211712|1555B7DCA052B5958EE68DB58A42408D|/')">ED2K</button>
+                            </div>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-yellow-500 text-white text-xs rounded flex items-center justify-center mr-3">3</span>
+                                <span class="text-sm">Win10 22H2 企业版 64位</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTAyMmgyYnVzaW5lc3MuaXNvWlo=')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|zh-cn_windows_10_business_editions_version_22h2_updated_july_2025_x64_dvd_08e988c4.iso|6401970176|412732848468940F74D256293073224B|/')">ED2K</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg p-5 border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold">Win11 热门下载</h3>
+                        <a href="#win11" class="text-blue-600 text-sm">更多 ></a>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-center justify-between pb-3 border-b border-gray-100">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-red-500 text-white text-xs rounded flex items-center justify-center mr-3">1</span>
+                                <span class="text-sm">Win11 25H2 专业纯净版 64位</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyNUgyLmlzb1pa')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|Win11_25H2_Chinese_Simplified_x64_v2.iso|8543608832|63195D05D675D2A00A9C5A1A5DC82B9C|h=BYX2XONEWGDI7YBSI6AVNUTDAZEJM57Q|/')">ED2K</button>
+                            </div>
+                        </li>
+                        <li class="flex items-center justify-between pb-3 border-b border-gray-100">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-orange-500 text-white text-xs rounded flex items-center justify-center mr-3">2</span>
+                                <span class="text-sm">Win11 24H2 商业版 64位(2025-10更新)</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyNGgyLmlzb1pa')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|zh-cn_windows_11_business_editions_version_24h2_updated_oct_2025_x64_dvd_a30b900a.iso|7725697024|5C332F67D652BF7C0376DD1EE2BD9A43|h=X4VTT63DXEGGZE45PJFKYUXUJISSKJDB|/')">ED2K</button>
+                            </div>
+                        </li>
+                        <li class="flex items-center justify-between pb-3 border-b border-gray-100">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-yellow-500 text-white text-xs rounded flex items-center justify-center mr-3">3</span>
+                                <span class="text-sm">Win11 23H2 商业版 64位(2024-09更新)</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyM0gyLmlzb1pa')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|zh-cn_windows_11_business_editions_version_23h2_updated_sep_2024_x64_dvd_22316bf2.iso|7094269952|9437FD5D778E65B27176BA17CF40BC32|h=A3X2FTXS75BBBF7QMCTBBPO6RL2KUTB2|/')">ED2K</button>
+                            </div>
+                        </li>
+                        <li class="flex items-center justify-between pb-3 border-b border-gray-100">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-green-500 text-white text-xs rounded flex items-center justify-center mr-3">4</span>
+                                <span class="text-sm">Win11 22H2 商业版 64位(2023-10更新)</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyMkgyLmlzb1pa')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|zh-cn_windows_11_business_editions_version_22h2_updated_oct_2023_x64_dvd_370ed1b7.iso|6615459840|8F46CEFA55F43404535AF960B4784E67|h=TSJ3FKCFN7Q53SPURMAM7YYRIB46YRCK|/')">ED2K</button>
+                            </div>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="w-5 h-5 bg-blue-500 text-white text-xs rounded flex items-center justify-center mr-3">5</span>
+                                <span class="text-sm">Win11 21H2 商业版 64位(2022-08更新)</span>
+                            </div>
+                            <div class="flex space-x-2 text-xs">
+                                <button class="text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyMUgyLmlzb1pa')">迅雷</button>
+                                <button class="text-gray-600" onclick="copyLink('ed2k://|file|zh-cn_windows_11_business_editions_version_21h2_updated_aug_2022_x64_dvd_01ab3d1a.iso|5773361152|E2E979BB3A24CFF03011C6888D4F3C8E|h=237QAN4A22GSJHM3UZM7EFZOPFCFS6CI|/')">ED2K</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 装机必备工具 -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold">装机必备工具</h3>
+                    <a href="#" class="text-blue-600 text-sm">全部工具 ></a>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    <div class="bg-white rounded-lg p-4 text-center card-hover border border-gray-100">
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                            <span class="text-blue-600 text-sm">PE</span>
+                        </div>
+                        <h4 class="text-sm font-medium">微PE工具箱</h4>
+                        <div class="flex flex-col gap-1 mt-2">
+                            <button class="text-xs text-blue-600" onclick="copyLink('thunder://QUFlZDJrOi8vfGZpbGV8V2VQRV82NF9WMi4zLmV4ZXwyMzg1OTEwMjh8QjM0NDA3QjlDNzU5OTUyQzdDRjk3RDU3QzUwOUY2M3xoPUZZNkdNMklIVlVJWk0yWUdJNUhFTUxDSU5MUk03RkxFfC9aWg==')">迅雷下载</button>
+                            <button class="text-xs text-gray-600" onclick="copyLink('ed2k://|file|WePE_64_V2.3.exe|238591028|B34407B9C759952C7DFC97D57C509F63|h=FY6GM22IHVUIZ2YGI5TMELCINLRM7FLE|/')">ED2K下载</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 text-center card-hover border border-gray-100">
+                        <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                            <span class="text-green-600 text-sm">驱动</span>
+                        </div>
+                        <h4 class="text-sm font-medium">驱动总裁</h4>
+                        <div class="flex flex-col gap-1 mt-2">
+                            <button class="text-xs text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vZHJpdmVyLmV4ZVpa')">迅雷下载</button>
+                            <button class="text-xs text-gray-600" onclick="copyLink('ed2k://|file|DrvCeo.exe|125829120|E1F2A3B4C5D67890ABCDEF1234567890|/')">ED2K下载</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 text-center card-hover border border-gray-100">
+                        <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                            <span class="text-purple-600 text-sm">激活</span>
+                        </div>
+                        <h4 class="text-sm font-medium">数字激活工具</h4>
+                        <div class="flex flex-col gap-1 mt-2">
+                            <button class="text-xs text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vYWN0aXZhdGUuZXhlWlo=')">迅雷下载</button>
+                            <button class="text-xs text-gray-600" onclick="copyLink('ed2k://|file|Activate.exe|5242880|F1A2B3C4D5E67890ABCDEF1234567890|/')">ED2K下载</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 text-center card-hover border border-gray-100">
+                        <div class="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                            <span class="text-orange-600 text-sm">刻录</span>
+                        </div>
+                        <h4 class="text-sm font-medium">Rufus启动盘</h4>
+                        <div class="flex flex-col gap-1 mt-2">
+                            <button class="text-xs text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vcnVmdXMuZXhlWlo=')">迅雷下载</button>
+                            <button class="text-xs text-gray-600" onclick="copyLink('ed2k://|file|Rufus.exe|3145728|A2B3C4D5E6F77890ABCDEF1234567890|/')">ED2K下载</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 text-center card-hover border border-gray-100">
+                        <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                            <span class="text-red-600 text-sm">检测</span>
+                        </div>
+                        <h4 class="text-sm font-medium">硬件检测工具</h4>
+                        <div class="flex flex-col gap-1 mt-2">
+                            <button class="text-xs text-blue-600" onclick="copyLink('thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vaHdkZXRlY3QuZXhlWlo=')">迅雷下载</button>
+                            <button class="text-xs text-gray-600" onclick="copyLink('ed2k://|file|HWInfo.exe|10485760|B2C3D4E5F6A77890ABCDEF1234567890|/')">ED2K下载</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 重装系统教程模块 -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold">重装系统教程</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-lg p-5 border border-gray-100 card-hover">
+                        <h4 class="font-semibold mb-2">U盘重装系统详细图文教程</h4>
+                        <p class="text-gray-500 text-sm mb-3">零基础也能学会，全程一步一图讲解，支持Win10/Win11全版本安装</p>
+                        <span class="text-xs text-gray-400">阅读：25,680 · 2024-07-20</span>
+                    </div>
+                    <div class="bg-white rounded-lg p-5 border border-gray-100 card-hover">
+                        <h4 class="font-semibold mb-2">BIOS设置U盘启动方法大全</h4>
+                        <p class="text-gray-500 text-sm mb-3">涵盖华硕、联想、戴尔、惠普等主流品牌主板BIOS启动项设置方法</p>
+                        <span class="text-xs text-gray-400">阅读：18,920 · 2024-06-15</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ====================== 分类列表页 ====================== -->
+        <div id="page-category" class="page">
+            <div class="mb-6">
+                <h2 id="category-title" class="text-2xl font-bold mb-2">Win11系统</h2>
+                <p id="category-desc" class="text-gray-500 text-sm">Win11 21H2-25H2各版本，纯净原版镜像</p>
+            </div>
+            <div id="system-list" class="grid gap-4"></div>
+        </div>
+
+        <!-- ====================== 关于页面 ====================== -->
+        <div id="page-about" class="page">
+            <div class="bg-white rounded-xl p-8 border border-gray-100 max-w-2xl">
+                <h2 class="text-2xl font-bold mb-6">关于本软件</h2>
+                <div class="space-y-3 text-gray-700">
+                    <p><strong>软件名称：</strong>系统之家客户端</p>
+                    <p><strong>软件版本：</strong>5.7.2</p>
+                    <p><strong>当前登录用户：</strong><span id="about-user">未设置</span></p>
+                    <p><strong>功能说明：</strong>Windows原版系统镜像查阅，复制ED2K/迅雷下载链接，配合迅雷、电驴进行下载。</p>
+                    <p><strong>提示：</strong>本程序仅做资源索引展示，请支持微软官方正版Windows系统。</p>
+                    <p class="text-gray-400 mt-6">© 2026</p>
+                </div>
+                <div class="mt-8 flex gap-3">
+                    <button onclick="goHome()" class="bg-blue-600 text-white px-5 py-2 rounded">返回首页</button>
+                    <button onclick="resetAuth()" class="bg-red-500 text-white px-5 py-2 rounded">重置验证（重新走许可+密钥）</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-gray-400 py-8 mt-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-6">
+                <div>
+                    <h4 class="text-white font-bold mb-3">关于本站</h4>
+                    <p class="text-sm leading-6">本站专注分享Windows系统安装教程与合法工具，所有内容仅供学习交流。请支持微软正版软件，请勿用于商业用途。</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-3">快速导航</h4>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <a href="#win11" class="hover:text-white transition">Win11系统</a>
+                        <a href="#win10" class="hover:text-white transition">Win10系统</a>
+                        <a href="#win7" class="hover:text-white transition">Win7系统</a>
+                        <a href="#server" class="hover:text-white transition">服务器系统</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-3">免责声明</h4>
+                    <p class="text-sm leading-6">本站所有资源均来自网络，仅作技术交流使用。如涉及版权问题，请联系我们及时处理。</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-6 text-center text-xs">
+                <p>© 2024 系统之家 · 仅供学习交流 · 请支持正版</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ================================================================
+        // 🔒 入口守卫：没通过 许可协议 + 密钥验证 的，直接踢回 license.html
+        // ================================================================
+        if (localStorage.getItem('licenseAccepted') !== 'true' ||
+            localStorage.getItem('keyVerified') !== 'true') {
+            location.href = 'license.html';
+        }
+
+        const categoryConfig = {
+            win11: { title: 'Win11系统', desc: 'Win11 21H2-25H2各版本，纯净原版镜像' },
+            win10: { title: 'Win10系统', desc: '稳定流畅首选，兼容绝大多数软件和游戏' },
+            win7:  { title: 'Win7系统', desc: 'Win7 SP1原版多版本，32/64位齐全' },
+            server: { title: '服务器系统', desc: 'Windows Server全系列，适合服务器部署' },
+            about: { title: '关于', desc: '软件版本与用户信息' }
+        };
+
+        const systems = [
+            // ============ Win11 ============
+            { id: 1, category: 'win11', name: 'Win11 25H2 专业纯净版 64位', size: '7.96GB', date: '2025-10-05', downloads: 142360,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyNUgyLmlzb1pa',
+              ed2k: 'ed2k://|file|Win11_25H2_Chinese_Simplified_x64_v2.iso|8543608832|63195D05D675D2A00A9C5A1A5DC82B9C|h=BYX2XONEWGDI7YBSI6AVNUTDAZEJM57Q|/' },
+            { id: 2, category: 'win11', name: 'Win11 24H2 商业版 64位(2025-10更新)', size: '7.19GB', date: '2025-10-20', downloads: 128560,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyNGgyLmlzb1pa',
+              ed2k: 'ed2k://|file|zh-cn_windows_11_business_editions_version_24h2_updated_oct_2025_x64_dvd_a30b900a.iso|7725697024|5C332F67D652BF7C0376DD1EE2BD9A43|h=X4VTT63DXEGGZE45PJFKYUXUJISSKJDB|/' },
+            { id: 3, category: 'win11', name: 'Win11 23H2 商业版 64位(2024-09更新)', size: '6.6GB', date: '2024-09-17', downloads: 102450,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyM0gyLmlzb1pa',
+              ed2k: 'ed2k://|file|zh-cn_windows_11_business_editions_version_23h2_updated_sep_2024_x64_dvd_22316bf2.iso|7094269952|9437FD5D778E65B27176BA17CF40BC32|h=A3X2FTXS75BBBF7QMCTBBPO6RL2KUTB2|/' },
+            { id: 4, category: 'win11', name: 'Win11 22H2 商业版 64位(2023-10更新)', size: '6.15GB', date: '2023-10-12', downloads: 91320,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyMkgyLmlzb1pa',
+              ed2k: 'ed2k://|file|zh-cn_windows_11_business_editions_version_22h2_updated_oct_2023_x64_dvd_370ed1b7.iso|6615459840|8F46CEFA55F43404535AF960B4784E67|h=TSJ3FKCFN7Q53SPURMAM7YYRIB46YRCK|/' },
+            { id: 5, category: 'win11', name: 'Win11 21H2 商业版 64位(2022-08更新)', size: '5.38GB', date: '2022-08-15', downloads: 74680,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTEyMUgyLmlzb1pa',
+              ed2k: 'ed2k://|file|zh-cn_windows_11_business_editions_version_21h2_updated_aug_2022_x64_dvd_01ab3d1a.iso|5773361152|E2E979BB3A24CFF03011C6888D4F3C8E|h=237QAN4A22GSJHM3UZM7EFZOPFCFS6CI|/' },
+            // ============ Win10 ============
+            { id: 6, category: 'win10', name: 'Win10 22H2 消费者版 64位(2025-07更新)', size: '6.49GB', date: '2025-07-15', downloads: 156890,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTAyMmgyLmlzb1pa',
+              ed2k: 'ed2k://|file|zh-cn_windows_10_consumer_editions_version_22h2_updated_july_2025_x64_dvd_f841fba5.iso|6969270272|32FA102F277B242C2E37135014CA1200|/' },
+            { id: 7, category: 'win10', name: 'Win10 22H2 企业版 64位(2025-07更新)', size: '5.96GB', date: '2025-07-15', downloads: 121000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTAyMmgyYnVzaW5lc3MuaXNvWlo=',
+              ed2k: 'ed2k://|file|zh-cn_windows_10_business_editions_version_22h2_updated_july_2025_x64_dvd_08e988c4.iso|6401970176|412732848468940F74D256293073224B|/' },
+            { id: 8, category: 'win10', name: 'Win10 企业版 LTSC 2021 64位', size: '4.7GB', date: '2021-11-17', downloads: 112340,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luMTBsdHNjLmlzb1pa',
+              ed2k: 'ed2k://|file|SW_DVD9_WIN_ENT_LTSC_2021_64BIT_ChnSimp_MLF_X22-84402.ISO|5044211712|1555B7DCA052B5958EE68DB58A42408D|/' },
+            // ============ Win7 ============
+            { id: 9, category: 'win7', name: 'Win7 旗舰版 SP1 64位', size: '3.19GB', date: '2011-05-12', downloads: 132000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3VsdGltYXRlX3NwMV82NC5pc29aWg==',
+              ed2k: 'ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/' },
+            { id: 10, category: 'win7', name: 'Win7 旗舰版 SP1 32位', size: '2.47GB', date: '2011-05-12', downloads: 96000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3VsdGltYXRlX3NwMV84Ni5pc29aWg==',
+              ed2k: 'ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/' },
+            { id: 11, category: 'win7', name: 'Win7 专业版 SP1 64位', size: '3.19GB', date: '2011-05-12', downloads: 88000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3Byb19zcDFfNjQuaXNvWlo=',
+              ed2k: 'ed2k://|file|cn_windows_7_professional_with_sp1_x64_dvd_u_677639.iso|3420557312|0BC6C43EBA5D8C40B9C1E2AD45923914|/' },
+            { id: 12, category: 'win7', name: 'Win7 专业版 SP1 32位', size: '2.47GB', date: '2011-05-12', downloads: 72000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3Byb19zcDFfODYuaXNvWlo=',
+              ed2k: 'ed2k://|file|cn_windows_7_professional_with_sp1_x86_dvd_u_677465.iso|2653276160|3660010E6120DD11AE55D6627B409828|/' },
+            { id: 13, category: 'win7', name: 'Win7 家庭高级版 SP1 64位', size: '3.19GB', date: '2011-05-12', downloads: 61000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3htcHJlbWl1b19zcDFfNjQuaXNvWlo=',
+              ed2k: 'ed2k://|file|cn_windows_7_home_premium_with_sp1_x64_dvd_u_676691.iso|3420557312|1A3CF44F3F5E0BE9BBC1A938706A3471|/' },
+            { id: 14, category: 'win7', name: 'Win7 家庭高级版 SP1 32位', size: '2.47GB', date: '2011-05-12', downloads: 53000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3htcHJlbWl1b19zcDFfODYuaXNvWlo=',
+              ed2k: 'ed2k://|file|cn_windows_7_home_premium_with_sp1_x86_dvd_u_677032.iso|2653276160|4E065E8D61E44C5179D3BD1035D52298|/' },
+            { id: 15, category: 'win7', name: 'Win7 家庭普通版 SP1 64位', size: '3.19GB', date: '2011-05-12', downloads: 44000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3htYmFzaWNfc3AxXzY0Lmlzb1pa',
+              ed2k: 'ed2k://|file|cn_windows_7_home_basic_with_sp1_x64_dvd_u_677648.iso|3420557312|BF59F7035290F38351D0B15D5E3D64F0|/' },
+            { id: 16, category: 'win7', name: 'Win7 家庭普通版 SP1 32位', size: '2.47GB', date: '2011-05-12', downloads: 38000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3htYmFzaWNfc3AxXzg2Lmlzb1pa',
+              ed2k: 'ed2k://|file|cn_windows_7_home_basic_with_sp1_x86_dvd_u_677477.iso|2653276160|8852766414090D81E54D3F0D46F93B39|/' },
+            { id: 17, category: 'win7', name: 'Win7 企业版 SP1 64位', size: '3.02GB', date: '2011-05-12', downloads: 57000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3VudGVycHJpc2Vfc3AxXzY0Lmlzb1pa',
+              ed2k: 'ed2k://|file|cn_windows_7_enterprise_with_sp1_x64_dvd_u_677685.iso|3265496064|507190F350514E573902F080614925EB|/' },
+            { id: 18, category: 'win7', name: 'Win7 企业版 SP1 32位', size: '2.33GB', date: '2011-05-12', downloads: 41000,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vd2luN3VudGVycHJpc2Vfc3AxXzg2Lmlzb1pa',
+              ed2k: 'ed2k://|file|cn_windows_7_enterprise_with_sp1_x86_dvd_u_677691.iso|2503317504|D7BC3F3C4D60992E422530B555C3F9A4|/' },
+            // ============ Server ============
+            { id: 19, category: 'server', name: 'Windows Server 2022 数据中心/标准版 64位', size: '5.8GB', date: '2024-08-01', downloads: 32100,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vc2VydmVyMjAyMi5pc29aWg==',
+              ed2k: 'ed2k://|file|zh-cn_windows_server_2022_updated_aug_2026_x64_dvd_f5ac19b0.iso|6228518912|0424488B30421052A418814E22738374|/' },
+            { id: 20, category: 'server', name: 'Windows Server 2019 标准版/数据中心 64位', size: '5.28GB', date: '2022-11-09', downloads: 28760,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vc2VydmVyMjAxOS5pc29aWg==',
+              ed2k: 'ed2k://|file|cn_windows_server_2019_updated_nov_2022_x64_dvd_03c34df6.iso|5675251712|19AE348F0D321785007D95B7D2FAF320|/' },
+            { id: 21, category: 'server', name: 'Windows Server 2016 批量许可版 64位', size: '5.87GB', date: '2018-02-13', downloads: 21340,
+              thunder: 'thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vc2VydmVyMjAxNi5pc29aWg==',
+              ed2k: 'ed2k://|file|cn_windows_server_2016_vl_x64_dvd_11636695.iso|6302720000|DDEDF3ACE182587BAA268AB8AE0D9EA3|/' }
+        ];
+
+        // ========= 用户本地存储功能 =========
+        function renderUser(){
+            const uname = localStorage.getItem("app_username") || "未设置";
+            document.getElementById("username-show").innerText = uname;
+            document.getElementById("username-input").value = uname === "未设置" ? "" : uname;
+            document.getElementById("about-user").innerText = uname;
+        }
+        function saveUser(){
+            const val = document.getElementById("username-input").value.trim();
+            if(!val){ showToast("用户名不能为空"); return; }
+            localStorage.setItem("app_username", val);
+            renderUser();
+            showToast("用户名已保存");
+        }
+        function clearUser(){
+            localStorage.removeItem("app_username");
+            renderUser();
+            document.getElementById("username-input").value = "";
+            showToast("用户名已清除");
+        }
+
+        // 导出用户数据
+        function exportUser() {
+            const username = localStorage.getItem("app_username") || "";
+            const exportData = {
+                appName: "系统之家客户端",
+                version: "5.7.2",
+                exportTime: new Date().toLocaleString(),
+                user: { username: username }
+            };
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "系统之家用户数据.json";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+            showToast("用户数据已导出");
+        }
+
+        // 导入用户数据
+        function importUser() {
+            document.getElementById("importFile").click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.user && data.user.username) {
+                        localStorage.setItem("app_username", data.user.username);
+                        renderUser();
+                        showToast("导入成功，当前用户：" + data.user.username);
+                    } else {
+                        showToast("文件格式不正确，请选择导出的数据文件");
+                    }
+                } catch (err) {
+                    showToast("导入失败，文件不是有效的JSON");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = "";
+        }
+
+        // ========= 重置验证 =========
+        function resetAuth() {
+            if (confirm('确定要重置验证状态吗？下次访问需要重新同意协议并输入密钥。')) {
+                localStorage.removeItem('licenseAccepted');
+                localStorage.removeItem('keyVerified');
+                location.href = 'license.html';
+            }
+        }
+
+        // 路由
+        window.addEventListener('load', () => { renderUser(); router(); });
+        window.addEventListener('hashchange', () => { renderUser(); router(); });
+
+        function router() {
+            document.getElementById('searchInput').value = '';
+            const hash = window.location.hash.slice(1) || 'home';
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            if (hash === 'home') {
+                document.getElementById('page-home').classList.add('active');
+            } else if (hash === 'about') {
+                document.getElementById('page-about').classList.add('active');
+            } else if (categoryConfig[hash]) {
+                document.getElementById('page-category').classList.add('active');
+                renderCategory(hash);
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function goHome() { window.location.hash = 'home'; }
+        function goCategory(category) { window.location.hash = category; }
+
+        function renderCategory(category) {
+            const config = categoryConfig[category];
+            const list = systems.filter(item => item.category === category);
+            document.getElementById('category-title').textContent = config.title;
+            document.getElementById('category-desc').textContent = config.desc;
+            document.getElementById('system-list').innerHTML = list.map(item => `
+                <div class="bg-white rounded-lg p-5 border border-gray-100 card-hover">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div class="mb-4 md:mb-0">
+                            <h4 class="font-semibold text-lg mb-2">${item.name}</h4>
+                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                                <span>文件大小：${item.size}</span>
+                                <span>更新时间：${item.date}</span>
+                                <span>下载次数：${item.downloads.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button class="bg-blue-600 text-white px-5 py-2 rounded-md download-btn text-sm" onclick="copyLink('${item.thunder}')">迅雷下载</button>
+                            <button class="bg-gray-600 text-white px-5 py-2 rounded-md ed2k-btn text-sm" onclick="copyLink('${item.ed2k}')">ED2K下载</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 搜索
+        function doSearch(){
+            const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+            if(!keyword){ showToast("请输入搜索关键词"); return; }
+            let result;
+            if(keyword === 'windows'){
+                result = [...systems];
+            } else {
+                result = systems.filter(s => s.name.toLowerCase().includes(keyword));
+            }
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-category').classList.add('active');
+            document.getElementById('category-title').innerText = `搜索结果：${keyword}`;
+            document.getElementById('category-desc').innerText = `共找到 ${result.length} 个系统镜像`;
+            const container = document.getElementById('system-list');
+            if(result.length === 0){
+                container.innerHTML = "<div class='p-10 text-center text-gray-500'>没有找到匹配的系统镜像，请更换关键词重试</div>";
+                return;
+            }
+            container.innerHTML = result.map(item => `
+                <div class="bg-white rounded-lg p-5 border border-gray-100 card-hover">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div class="mb-4 md:mb-0">
+                            <h4 class="font-semibold text-lg mb-2">${item.name}</h4>
+                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                                <span>文件大小：${item.size}</span>
+                                <span>更新时间：${item.date}</span>
+                                <span>下载次数：${item.downloads.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button class="bg-blue-600 text-white px-5 py-2 rounded-md download-btn text-sm" onclick="copyLink('${item.thunder}')">迅雷下载</button>
+                            <button class="bg-gray-600 text-white px-5 py-2 rounded-md ed2k-btn text-sm" onclick="copyLink('${item.ed2k}')">ED2K下载</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            window.scrollTo(0,0);
+        }
+
+        // 复制链接
+        function copyLink(link) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(link)
+                    .then(() => showToast('链接已复制到剪贴板'))
+                    .catch(() => fallbackCopy(link));
+            } else {
+                fallbackCopy(link);
+            }
+        }
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '0';
+            textarea.style.left = '0';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('链接已复制到剪贴板');
+            } catch (err) {
+                showToast('复制失败，请手动复制链接');
+            }
+            document.body.removeChild(textarea);
+        }
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 2000);
+        }
+    </script>
+</body>
+</html>
